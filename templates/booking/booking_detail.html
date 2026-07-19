@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Booking {{ booking.pnr }} - RailBook{% endblock %}
+{% block content %}
+
+<div class="card p-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap">
+        <div>
+            <h4>{{ booking.train.name }} <small class="text-muted">#{{ booking.train.train_number }}</small></h4>
+            <p class="mb-1">{{ booking.train.source }} &rarr; {{ booking.train.destination }}</p>
+            <p class="mb-1">Journey Date: <strong>{{ booking.journey_date|date:"D, d M Y" }}</strong></p>
+            <p class="mb-1">Departure: {{ booking.train.departure_time|time:"H:i" }} | Arrival: {{ booking.train.arrival_time|time:"H:i" }}</p>
+        </div>
+        <div class="text-end">
+            <h5>PNR: <span class="font-monospace">{{ booking.pnr }}</span></h5>
+            {% if booking.status == 'CONFIRMED' %}
+                <span class="badge badge-confirmed">Confirmed</span>
+            {% elif booking.status == 'WAITING' %}
+                <span class="badge badge-waiting">Waiting List</span>
+            {% else %}
+                <span class="badge badge-cancelled">Cancelled</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <hr>
+
+    <h6>Passengers</h6>
+    <table class="table">
+        <thead>
+            <tr><th>Name</th><th>Age</th><th>Gender</th><th>Seat</th></tr>
+        </thead>
+        <tbody>
+        {% for p in booking.passengers.all %}
+            <tr>
+                <td>{{ p.name }}</td>
+                <td>{{ p.age }}</td>
+                <td>{{ p.get_gender_display }}</td>
+                <td>{{ p.seat_number|default:"WL" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Total Fare: &#8377;{{ booking.total_fare }}</h5>
+        {% if booking.status != 'CANCELLED' %}
+        <a href="{% url 'cancel_booking' booking.pnr %}" class="btn btn-outline-danger">Cancel Booking</a>
+        {% endif %}
+    </div>
+</div>
+
+<a href="{% url 'my_bookings' %}" class="btn btn-link mt-3">&larr; Back to My Bookings</a>
+{% endblock %}

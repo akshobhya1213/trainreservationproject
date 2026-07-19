@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}My Bookings - RailBook{% endblock %}
+{% block content %}
+<h4 class="mb-4">My Bookings</h4>
+
+{% if not bookings %}
+    <div class="alert alert-info">You have no bookings yet. <a href="{% url 'home' %}">Search for trains</a>.</div>
+{% endif %}
+
+{% for booking in bookings %}
+<div class="card p-3 mb-3">
+    <div class="row align-items-center">
+        <div class="col-md-4">
+            <h6 class="mb-0">{{ booking.train.name }}</h6>
+            <small class="text-muted">{{ booking.train.source }} &rarr; {{ booking.train.destination }}</small>
+        </div>
+        <div class="col-md-2">{{ booking.journey_date|date:"d M Y" }}</div>
+        <div class="col-md-2 font-monospace">{{ booking.pnr }}</div>
+        <div class="col-md-2">
+            {% if booking.status == 'CONFIRMED' %}
+                <span class="badge badge-confirmed">Confirmed</span>
+            {% elif booking.status == 'WAITING' %}
+                <span class="badge badge-waiting">Waiting</span>
+            {% else %}
+                <span class="badge badge-cancelled">Cancelled</span>
+            {% endif %}
+        </div>
+        <div class="col-md-2 text-end">
+            <a href="{% url 'booking_detail' booking.pnr %}" class="btn btn-sm btn-outline-primary">View</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

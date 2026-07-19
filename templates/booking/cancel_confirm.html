@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Cancel Booking - RailBook{% endblock %}
+{% block content %}
+<div class="card p-4">
+    <h5>Cancel Booking {{ booking.pnr }}?</h5>
+    <p>{{ booking.train.name }} on {{ booking.journey_date|date:"D, d M Y" }} for {{ booking.num_seats }} passenger(s).</p>
+    <p class="text-danger">This action cannot be undone.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Cancel Booking</button>
+        <a href="{% url 'booking_detail' booking.pnr %}" class="btn btn-outline-secondary">Go Back</a>
+    </form>
+</div>
+{% endblock %}

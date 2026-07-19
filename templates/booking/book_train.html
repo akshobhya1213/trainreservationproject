@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Book {{ train.name }} - RailBook{% endblock %}
+{% block content %}
+
+<div class="card p-4 mb-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h4>{{ train.name }} <small class="text-muted">#{{ train.train_number }}</small></h4>
+            <p class="mb-1">{{ train.source }} &rarr; {{ train.destination }}</p>
+            <p class="mb-1">Departure: {{ train.departure_time|time:"H:i" }} | Arrival: {{ train.arrival_time|time:"H:i" }}</p>
+            <p class="mb-0">Journey Date: <strong>{{ journey_date|date:"D, d M Y" }}</strong></p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <h5>Fare: &#8377;{{ train.fare }} / seat</h5>
+            {% if available > 0 %}
+                <span class="text-success">{{ available }} seats available</span>
+            {% else %}
+                <span class="text-danger">No seats left - waiting list</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if not show_passenger_form %}
+<div class="card p-4">
+    <h5 class="mb-3">How many passengers?</h5>
+    <form method="get" class="row g-3">
+        <input type="hidden" name="date" value="{{ journey_date|date:'Y-m-d' }}">
+        <div class="col-md-3">
+            <input type="number" name="num_passengers" min="1" max="6" value="1" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">Continue</button>
+        </div>
+    </form>
+</div>
+{% else %}
+<div class="card p-4">
+    <h5 class="mb-3">Passenger Details ({{ num_passengers }})</h5>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="journey_date" value="{{ journey_date|date:'Y-m-d' }}">
+        {% for i in passenger_range %}
+        <div class="row g-3 border-bottom pb-3 mb-3">
+            <div class="col-md-5">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="passenger_name[]" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Age</label>
+                <input type="number" name="passenger_age[]" min="1" max="120" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Gender</label>
+                <select name="passenger_gender[]" class="form-select" required>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                    <option value="O">Other</option>
+                </select>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Total Fare: &#8377;{{ train.fare|floatformat:2 }} &times; {{ num_passengers }}</h5>
+            <button type="submit" name="submit_booking" value="1" class="btn btn-success btn-lg">
+                Confirm Booking
+            </button>
+        </div>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

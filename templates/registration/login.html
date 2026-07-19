@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Login - RailBook{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-5">
+<div class="card p-4">
+    <h4 class="mb-3">Login</h4>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+    <p class="mt-3 mb-0">No account? <a href="{% url 'register' %}">Register here</a></p>
+</div>
+</div>
+</div>
+{% endblock %}

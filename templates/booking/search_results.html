@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Search Results - RailBook{% endblock %}
+{% block content %}
+
+<div class="card p-4 mb-4">
+    <form method="get" action="{% url 'search_trains' %}" class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">From</label>
+            {{ form.source }}
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">To</label>
+            {{ form.destination }}
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Date</label>
+            {{ form.journey_date }}
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
+</div>
+
+{% if form.is_valid %}
+    <h5 class="mb-3">
+        {{ trains|length }} train{{ trains|length|pluralize }} found for {{ journey_date|date:"D, d M Y" }}
+    </h5>
+
+    {% if not trains %}
+        <div class="alert alert-info">No trains found for this route/date. Try a different search.</div>
+    {% endif %}
+
+    {% for item in trains %}
+        <div class="card p-3 mb-3">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <h5 class="mb-0">{{ item.train.name }}</h5>
+                    <small class="text-muted">#{{ item.train.train_number }}</small>
+                </div>
+                <div class="col-md-3">
+                    <div><strong>{{ item.train.departure_time|time:"H:i" }}</strong> {{ item.train.source }}</div>
+                    <div class="text-muted small"><i class="bi bi-arrow-down"></i></div>
+                    <div><strong>{{ item.train.arrival_time|time:"H:i" }}</strong> {{ item.train.destination }}</div>
+                </div>
+                <div class="col-md-2">
+                    {% if item.available > 0 %}
+                        <span class="text-success"><i class="bi bi-check-circle"></i> {{ item.available }} seats left</span>
+                    {% else %}
+                        <span class="text-danger"><i class="bi bi-x-circle"></i> Waiting list</span>
+                    {% endif %}
+                </div>
+                <div class="col-md-2">
+                    <h5 class="mb-0">&#8377;{{ item.train.fare }}</h5>
+                </div>
+                <div class="col-md-1 text-end">
+                    <a href="{% url 'book_train' item.train.id %}?date={{ journey_date|date:'Y-m-d' }}"
+                       class="btn btn-primary btn-sm">Book</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

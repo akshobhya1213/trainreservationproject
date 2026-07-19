@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}RailBook - Search Trains{% endblock %}
+{% block content %}
+<div class="hero p-5 mb-4">
+    <h1 class="mb-2"><i class="bi bi-train-front-fill"></i> Book Your Train Journey</h1>
+    <p class="mb-0">Search, book, and manage your train tickets easily.</p>
+</div>
+
+<div class="card p-4">
+    <h4 class="mb-3">Find Trains</h4>
+    <form method="get" action="{% url 'search_trains' %}" class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">From</label>
+            {{ form.source }}
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">To</label>
+            {{ form.destination }}
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Date</label>
+            {{ form.journey_date }}
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
+</div>
+{% endblock %}
