@@ -6,6 +6,7 @@ from .models import Booking, Passenger, Train
 class PassengerInline(admin.TabularInline):
     model = Passenger
     extra = 0
+    new = 0
 
 
 @admin.register(Train)
