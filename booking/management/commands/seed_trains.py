@@ -31,3 +31,17 @@ SAMPLE_TRAINS = [
 ]
 
 
+class Command(BaseCommand):
+    help = 'Seed the database with sample train data'
+
+    def handle(self, *args, **options):
+        created_count = 0
+        for data in SAMPLE_TRAINS:
+            _, created = Train.objects.get_or_create(
+                train_number=data['train_number'], defaults=data
+            )
+            if created:
+                created_count += 1
+        self.stdout.write(self.style.SUCCESS(
+            f'Seeded {created_count} new trains (skipped {len(SAMPLE_TRAINS) - created_count} existing).'
+        ))
