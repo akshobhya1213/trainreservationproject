@@ -19,6 +19,7 @@ class Train(models.Model):
         default='Mon,Tue,Wed,Thu,Fri,Sat,Sun',
         help_text='Comma separated e.g. Mon,Tue,Wed'
     )
+    
 
     class Meta:
         ordering = ['departure_time']
