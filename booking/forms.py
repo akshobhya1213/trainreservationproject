@@ -18,7 +18,6 @@ class PassengerCountForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control', 'style': 'max-width:120px'})
     )
 
-
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
