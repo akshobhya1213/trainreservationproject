@@ -25,6 +25,7 @@ class BookingAdmin(admin.ModelAdmin):
     inlines = [PassengerInline]
 
 
+
 @admin.register(Passenger)
 class PassengerAdmin(admin.ModelAdmin):
     list_display = ('name', 'age', 'gender', 'seat_number', 'booking')
