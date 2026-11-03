@@ -9,6 +9,7 @@ class PassengerInline(admin.TabularInline):
     new = 0
 
 
+
 @admin.register(Train)
 class TrainAdmin(admin.ModelAdmin):
     list_display = ('train_number', 'name', 'source', 'destination',
